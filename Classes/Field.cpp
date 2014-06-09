@@ -12,6 +12,7 @@
 Field::Field(cocos2d::Layer* layer)
     :mLayer(layer)
 {
+    mPieces.resize(16);
 }
 
 

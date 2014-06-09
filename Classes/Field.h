@@ -10,6 +10,8 @@
 #define __SquareWarrior__Field__
 
 #include "cocos2d.h"
+#include "Piece.h"
+#include <vector>
 
 class Field {
 public:
@@ -27,6 +29,8 @@ public:
     
 private:
     cocos2d::Layer* mLayer;
+    std::vector<PiecePtr> mPieces;
+    
 };
 
 typedef std::shared_ptr<Field> FieldPtr;
