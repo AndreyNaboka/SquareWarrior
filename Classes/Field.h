@@ -23,6 +23,8 @@ public:
         RIGHT
     };
     
+    static std::string directionToString(const MOVE_DIRECTION& direction);
+    
     Field(cocos2d::Layer *layer);
     void update(const float delta);
     void moveField(const MOVE_DIRECTION direction);
