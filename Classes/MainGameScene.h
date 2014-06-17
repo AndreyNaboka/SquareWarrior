@@ -26,7 +26,14 @@ private:
     FieldPtr mField;
     cocos2d::Size mVisibleSize;
     cocos2d::Vec2 mOrigin;
+    
+    
+    /// For movement direction check
     cocos2d::Vec2 mPrevTouch;
+    cocos2d::Vec2 mUpDirection;
+    cocos2d::Vec2 mDownDirection;
+    cocos2d::Vec2 mLeftDirection;
+    cocos2d::Vec2 mRightDirection;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

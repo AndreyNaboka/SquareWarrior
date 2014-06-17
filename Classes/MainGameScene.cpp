@@ -28,7 +28,30 @@ bool MainGameScene::init()
     listener->onTouchesEnded=std::bind(&MainGameScene::onTouchesEnded, this, std::placeholders::_1, std::placeholders::_2);
     Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 100);
     
-    mPrevTouch = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2), mOrigin.y + (mVisibleSize.height / 2));
+    
+    /// Movement direction
+    const cocos2d::Vec2 centerOfScreen = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2), mOrigin.y + (mVisibleSize.height / 2));
+    mPrevTouch = centerOfScreen;
+    
+    /// Up direction
+    mUpDirection = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2.0), mOrigin.y + mVisibleSize.height);
+    mUpDirection = centerOfScreen - mUpDirection;
+    mUpDirection.normalize();
+    
+    /// Down direction
+    mDownDirection = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2.0), mOrigin.y);
+    mDownDirection = centerOfScreen - mDownDirection;
+    mDownDirection.normalize();
+    
+    /// Left direction
+    mLeftDirection = cocos2d::Vec2(mOrigin.x, mOrigin.y + (mVisibleSize.height / 2.0));
+    mLeftDirection = centerOfScreen - mLeftDirection;
+    mLeftDirection.normalize();
+    
+    /// Right direction
+    mRightDirection = cocos2d::Vec2(mOrigin.x + mVisibleSize.width, mOrigin.y + (mVisibleSize.height / 2.0));
+    mRightDirection = centerOfScreen - mRightDirection;
+    mRightDirection.normalize();
     
     return true;
 }
@@ -39,37 +62,15 @@ void MainGameScene::proceedTouches(const std::vector<cocos2d::Touch *> &touches)
     if ((*touches.begin())->getLocation().distance(mPrevTouch) < 20.0f)
         return;
 
-    
-    const cocos2d::Vec2 centerOfScreen = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2), mOrigin.y + (mVisibleSize.height / 2));
-    
-    
-    cocos2d::Vec2 upDirection(mOrigin.x + (mVisibleSize.width / 2.0), mOrigin.y + mVisibleSize.height);
-    cocos2d::Vec2 upDirectionN = centerOfScreen - upDirection;
-    upDirectionN.normalize();
-
-    cocos2d::Vec2 downDirection(mOrigin.x + (mVisibleSize.width / 2.0), mOrigin.y);
-    cocos2d::Vec2 downDirectionN = centerOfScreen - downDirection;
-    downDirectionN.normalize();
-
-    cocos2d::Vec2 leftDirection(mOrigin.x, mOrigin.y + (mVisibleSize.height / 2.0));
-    cocos2d::Vec2 leftDirectionN = centerOfScreen - leftDirection;
-    leftDirectionN.normalize();
-
-    cocos2d::Vec2 rightDirection(mOrigin.x + mVisibleSize.width, mOrigin.y + (mVisibleSize.height / 2.0));
-    cocos2d::Vec2 rightDirectionN = centerOfScreen - rightDirection;
-    rightDirectionN.normalize();
-
-
-
     cocos2d::Vec2 touch = (*touches.begin())->getLocation();
     cocos2d::Vec2 touchToPrevTouch = mPrevTouch - touch;
     touchToPrevTouch.normalize();
     mPrevTouch = touch;
     
-    float angleBetweenUp    = acos(cocos2d::Vec2::dot(upDirectionN, touchToPrevTouch));
-    float angleBetweenDown  = acos(cocos2d::Vec2::dot(downDirectionN, touchToPrevTouch));
-    float angleBetweenLeft  = acos(cocos2d::Vec2::dot(leftDirectionN, touchToPrevTouch));
-    float angleBetweenRight = acos(cocos2d::Vec2::dot(rightDirectionN, touchToPrevTouch));
+    float angleBetweenUp    = acos(cocos2d::Vec2::dot(mUpDirection,    touchToPrevTouch));
+    float angleBetweenDown  = acos(cocos2d::Vec2::dot(mDownDirection,  touchToPrevTouch));
+    float angleBetweenLeft  = acos(cocos2d::Vec2::dot(mLeftDirection,  touchToPrevTouch));
+    float angleBetweenRight = acos(cocos2d::Vec2::dot(mRightDirection, touchToPrevTouch));
 
     
     
