@@ -2,6 +2,8 @@
 
 USING_NS_CC;
 
+#define DEBUG
+
 Scene* MainGameScene::createScene()
 {
     auto scene = Scene::create();
@@ -10,6 +12,8 @@ Scene* MainGameScene::createScene()
     return scene;
 }
 
+//----------------------------------------------------------------------------------------------------------
+
 bool MainGameScene::init()
 {
     mVisibleSize = Director::getInstance()->getVisibleSize();
@@ -17,7 +21,7 @@ bool MainGameScene::init()
     
     mField.reset(new Field(this));
     
-    // Start update
+    /// Start update
     srand(static_cast<unsigned int>(time(0)));
     schedule(schedule_selector(MainGameScene::update));
     
@@ -33,28 +37,27 @@ bool MainGameScene::init()
     const cocos2d::Vec2 centerOfScreen = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2), mOrigin.y + (mVisibleSize.height / 2));
     mPrevTouch = centerOfScreen;
     
-    /// Up direction
     mUpDirection = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2.0), mOrigin.y + mVisibleSize.height);
     mUpDirection = centerOfScreen - mUpDirection;
     mUpDirection.normalize();
     
-    /// Down direction
     mDownDirection = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2.0), mOrigin.y);
     mDownDirection = centerOfScreen - mDownDirection;
     mDownDirection.normalize();
     
-    /// Left direction
     mLeftDirection = cocos2d::Vec2(mOrigin.x, mOrigin.y + (mVisibleSize.height / 2.0));
     mLeftDirection = centerOfScreen - mLeftDirection;
     mLeftDirection.normalize();
     
-    /// Right direction
     mRightDirection = cocos2d::Vec2(mOrigin.x + mVisibleSize.width, mOrigin.y + (mVisibleSize.height / 2.0));
     mRightDirection = centerOfScreen - mRightDirection;
     mRightDirection.normalize();
     
     return true;
 }
+
+
+//----------------------------------------------------------------------------------------------------------
 
 void MainGameScene::proceedTouches(const std::vector<cocos2d::Touch *> &touches)
 {
@@ -74,38 +77,52 @@ void MainGameScene::proceedTouches(const std::vector<cocos2d::Touch *> &touches)
 
     
     
-    if (angleBetweenDown < angleBetweenUp && angleBetweenDown < angleBetweenLeft && angleBetweenDown < angleBetweenRight)
-    {
+    if (angleBetweenDown < angleBetweenUp &&
+        angleBetweenDown < angleBetweenLeft &&
+        angleBetweenDown < angleBetweenRight)
         mDirection = Field::MOVE_DIRECTION::BOTTOM;
-        
-    } else if (angleBetweenUp < angleBetweenDown && angleBetweenUp < angleBetweenLeft && angleBetweenUp < angleBetweenRight)
-    {
+    
+    else if (angleBetweenUp < angleBetweenDown &&
+             angleBetweenUp < angleBetweenLeft &&
+             angleBetweenUp < angleBetweenRight)
         mDirection = Field::MOVE_DIRECTION::TOP;
     
-    } else if (angleBetweenLeft < angleBetweenDown && angleBetweenLeft < angleBetweenRight && angleBetweenLeft < angleBetweenUp)
-    {
+    else if (angleBetweenLeft < angleBetweenDown &&
+             angleBetweenLeft < angleBetweenRight &&
+             angleBetweenLeft < angleBetweenUp)
         mDirection = Field::MOVE_DIRECTION::LEFT;
     
-    } else if (angleBetweenRight < angleBetweenDown && angleBetweenRight < angleBetweenLeft && angleBetweenRight < angleBetweenUp)
-    {
+    else if (angleBetweenRight < angleBetweenDown &&
+             angleBetweenRight < angleBetweenLeft &&
+             angleBetweenRight < angleBetweenUp)
         mDirection = Field::MOVE_DIRECTION::RIGHT;
-    }
     
+    
+#ifdef DEBUG
     std::cout << "Direction: " << Field::directionToString(mDirection) << std::endl;
+#endif
 }
+
+//----------------------------------------------------------------------------------------------------------
 
 void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
 }
+
+//----------------------------------------------------------------------------------------------------------
 
 void MainGameScene::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
     proceedTouches(touches);
 }
 
+//----------------------------------------------------------------------------------------------------------
+
 void MainGameScene::onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
 }
+
+//----------------------------------------------------------------------------------------------------------
 
 void MainGameScene::update(const float delta)
 {

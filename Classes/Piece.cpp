@@ -8,12 +8,12 @@
 
 #include "Piece.h"
 
-Piece::Piece(const int color)
-    :mColor(color)
+Piece::Piece()
+    :mColor(BLACK)
 {
 }
 
-int Piece::getColor() const
+Piece::COLORS Piece::getColor() const
 {
     return  mColor;
 }

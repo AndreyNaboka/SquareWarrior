@@ -10,13 +10,28 @@
 #define __SquareWarrior__Piece__
 #include <memory>
 
+
+
 class Piece {
 public:
-    Piece(const int color);
-    int getColor() const;
-    
+    enum COLORS {
+        BLACK,
+        WHITE,
+        YELLOW,
+        GREEN,
+        RED
+    };
+
+public:
+    Piece();
+    COLORS getColor() const;
+    void setCoords(const int x, const int y) { mX = x; mY = y; }
+    void setColor(const COLORS color)        { mColor = color; }
+    int  getX() const { return mX; }
+    int  getY() const { return mY; }
 private:
-    int mColor;
+    int mX, mY;
+    COLORS mColor;
 };
 
 typedef std::shared_ptr<Piece> PiecePtr;

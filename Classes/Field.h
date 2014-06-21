@@ -30,9 +30,15 @@ public:
     void moveField(const MOVE_DIRECTION direction);
     
 private:
-    cocos2d::Layer* mLayer;
-    std::vector<PiecePtr> mPieces;
+    void addRandomWarrior();
     
+private:
+    cocos2d::Layer* mLayer;
+    
+    static const int FIELD_WIDTH = 4;
+    static const int FIELD_HEIGHT = 4;
+    std::vector<PiecePtr> mField;
+    Piece::COLORS mFieldColorsMap[FIELD_WIDTH][FIELD_HEIGHT];
 };
 
 typedef std::shared_ptr<Field> FieldPtr;
