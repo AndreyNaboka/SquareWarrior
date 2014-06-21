@@ -17,7 +17,7 @@ private:
     void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
     void onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
     void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
-    void proceedTouches(const std::vector<cocos2d::Touch*>& touches);
+    Field::MOVE_DIRECTION proceedTouches(const std::vector<cocos2d::Touch*>& touches);
     
 
     

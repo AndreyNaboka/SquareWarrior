@@ -8,8 +8,10 @@
 
 #ifndef __SquareWarrior__Piece__
 #define __SquareWarrior__Piece__
-#include <memory>
 
+#include <string>
+#include <memory>
+#include "cocos2d.h"
 
 
 class Piece {
@@ -26,9 +28,12 @@ public:
     Piece();
     COLORS getColor() const;
     void setCoords(const int x, const int y) { mX = x; mY = y; }
-    void setColor(const COLORS color)        { mColor = color; }
+    void setColor(const COLORS color);
     int  getX() const { return mX; }
     int  getY() const { return mY; }
+    
+    static std::string colorToSpriteName(const Piece::COLORS color);
+    
 private:
     int mX, mY;
     COLORS mColor;

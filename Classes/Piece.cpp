@@ -15,5 +15,36 @@ Piece::Piece()
 
 Piece::COLORS Piece::getColor() const
 {
-    return  mColor;
+    return mColor;
+}
+
+void Piece::setColor(const Piece::COLORS color)
+{
+    if (mColor == color) return;
+    mColor = color;
+}
+
+
+std::string Piece::colorToSpriteName(const Piece::COLORS color)
+{
+    switch (color) {
+    case BLACK:
+        return "black.png";
+        break;
+    case WHITE:
+        return "white.png";
+        break;
+    case YELLOW:
+        return "yellow.png";
+        break;
+    case GREEN:
+        return "green.png";
+        break;
+    case RED:
+        return "red.png";
+        break;
+    default:
+        return "unknown";
+    };
+    return "";
 }

@@ -20,7 +20,8 @@ public:
         TOP,
         BOTTOM,
         LEFT,
-        RIGHT
+        RIGHT,
+        UNKNOWN
     };
     
     static std::string directionToString(const MOVE_DIRECTION& direction);
@@ -38,7 +39,7 @@ private:
     static const int FIELD_WIDTH = 4;
     static const int FIELD_HEIGHT = 4;
     std::vector<PiecePtr> mField;
-    Piece::COLORS mFieldColorsMap[FIELD_WIDTH][FIELD_HEIGHT];
+    cocos2d::Sprite* mFieldMap[FIELD_WIDTH][FIELD_HEIGHT];
 };
 
 typedef std::shared_ptr<Field> FieldPtr;
