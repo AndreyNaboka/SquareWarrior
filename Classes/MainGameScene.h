@@ -34,6 +34,8 @@ private:
     cocos2d::Vec2 mDownDirection;
     cocos2d::Vec2 mLeftDirection;
     cocos2d::Vec2 mRightDirection;
+    
+    bool mMovingNow;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

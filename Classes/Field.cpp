@@ -59,7 +59,7 @@ void Field::moveField(const Field::MOVE_DIRECTION direction)
 }
 
 //----------------------------------------------------------------------------------------------------------
-void Field::addRandomWarrior()
+void Field::addRandomWarrior(const int num)
 {
     std::vector<PiecePtr> freePieces;
     freePieces.reserve(mField.size());

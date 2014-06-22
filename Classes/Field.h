@@ -31,7 +31,7 @@ public:
     void moveField(const MOVE_DIRECTION direction);
     
 private:
-    void addRandomWarrior();
+    void addRandomWarrior(const int num = 1);
     
 private:
     cocos2d::Layer* mLayer;
