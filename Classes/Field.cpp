@@ -23,17 +23,15 @@ Field::Field(cocos2d::Layer* layer)
     background->setPosition(origin.x + (visibleSize.width/2), origin.y + (visibleSize.height/2));
     mLayer->addChild(background);
     
-    
     // Pieces prepare
     const float cellWidth = visibleSize.width / 4;
     const float cellHeight = cellWidth;
     const float topStartPosY = cellHeight * 4;
     for (int w = 0; w < FIELD_WIDTH; ++w) {
         for (int h = 0; h < FIELD_HEIGHT; ++h) {
-            auto newPiece = mField.insert(mField.end(), PiecePtr(new Piece()));
-            (*newPiece)->setCoords(w, h);
+            mField[w][h] = Piece::COLORS::BLACK;
             
-            mFieldMap[w][h] = cocos2d::Sprite::create(Piece::colorToSpriteName((*newPiece)->getColor()));
+            mFieldMap[w][h] = cocos2d::Sprite::create(Piece::colorToSpriteName(Piece::COLORS::BLACK));
             const float cellSpriteWidth = mFieldMap[w][h]->getContentSize().width;
             const float cellSpriteHeight = mFieldMap[w][h]->getContentSize().height;
 
@@ -55,28 +53,69 @@ void Field::update(const float delta)
 //----------------------------------------------------------------------------------------------------------
 void Field::moveField(const Field::MOVE_DIRECTION direction)
 {
+    switch (direction) {
+        case LEFT:
+            moveLeft();
+            break;
+        case RIGHT:
+            moveRight();
+            break;
+        case TOP:
+            moveTop();
+            break;
+        case BOTTOM:
+            moveBottom();
+            break;
+        default:
+            return;
+    }
     addRandomWarrior();
+}
+
+//----------------------------------------------------------------------------------------------------------
+void Field::moveLeft()
+{
+    
+}
+
+//----------------------------------------------------------------------------------------------------------
+void Field::moveRight()
+{
+    
+}
+
+//----------------------------------------------------------------------------------------------------------
+void Field::moveTop()
+{
+    
+}
+
+//----------------------------------------------------------------------------------------------------------
+void Field::moveBottom()
+{
+    
 }
 
 //----------------------------------------------------------------------------------------------------------
 void Field::addRandomWarrior(const int num)
 {
-    std::vector<PiecePtr> freePieces;
-    freePieces.reserve(mField.size());
-    for (auto i = mField.begin(); i != mField.end(); ++i) {
-        if ((*i)->getColor()==Piece::BLACK)
-            freePieces.push_back(*i);
+    std::vector<cocos2d::Vec2> freePieces;
+    for (int w = 0; w < FIELD_WIDTH; ++w) {
+        for (int h = 0; h < FIELD_HEIGHT; ++h) {
+            if (mField[w][h] == Piece::COLORS::BLACK)
+                freePieces.push_back(cocos2d::Vec2(w,h));
+        }
     }
     
-    if (freePieces.size()==0) {
+    if (freePieces.size() == 0)
         return;
-    }
+    
     
     int randomIndex = rand() % freePieces.size();
-    freePieces.at(randomIndex)->setColor(Piece::WHITE);
-    const int xPos = freePieces.at(randomIndex)->getX();
-    const int yPos = freePieces.at(randomIndex)->getY();
-    mFieldMap[xPos][yPos]->setTexture(Piece::colorToSpriteName(Piece::WHITE));
+    const int x = freePieces.at(randomIndex).x;
+    const int y = freePieces.at(randomIndex).y;
+    mField[x][y] = Piece::COLORS::WHITE;
+    mFieldMap[x][y]->setTexture(Piece::colorToSpriteName(Piece::WHITE));
 }
 
 //----------------------------------------------------------------------------------------------------------

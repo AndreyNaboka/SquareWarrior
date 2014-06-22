@@ -32,13 +32,17 @@ public:
     
 private:
     void addRandomWarrior(const int num = 1);
+    void moveLeft();
+    void moveRight();
+    void moveTop();
+    void moveBottom();
     
 private:
     cocos2d::Layer* mLayer;
     
     static const int FIELD_WIDTH = 4;
     static const int FIELD_HEIGHT = 4;
-    std::vector<PiecePtr> mField;
+    Piece::COLORS mField[FIELD_WIDTH][FIELD_HEIGHT];
     cocos2d::Sprite* mFieldMap[FIELD_WIDTH][FIELD_HEIGHT];
 };
 

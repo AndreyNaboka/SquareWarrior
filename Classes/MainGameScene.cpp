@@ -63,14 +63,8 @@ bool MainGameScene::init()
 
 Field::MOVE_DIRECTION MainGameScene::proceedTouches(const std::vector<cocos2d::Touch *> &touches)
 {
-    if (mMovingNow)
-        return Field::UNKNOWN;
-    
-    
     if ((*touches.begin())->getLocation().distance(mPrevTouch) < 100.0f)
         return Field::UNKNOWN;
-
-    mMovingNow = true;
     
     cocos2d::Vec2 touch = (*touches.begin())->getLocation();
     cocos2d::Vec2 touchToPrevTouch = mPrevTouch - touch;
@@ -121,6 +115,10 @@ void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, 
 
 void MainGameScene::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
+    if (mMovingNow) return;
+    
+    mMovingNow = true;
+    
     Field::MOVE_DIRECTION direction = proceedTouches(touches);
     if (direction != Field::UNKNOWN)
         mField->moveField(direction);
