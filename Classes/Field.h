@@ -36,7 +36,7 @@ private:
     void moveRight();
     void moveTop();
     void moveBottom();
-    
+    void redrawField();
 private:
     cocos2d::Layer* mLayer;
     

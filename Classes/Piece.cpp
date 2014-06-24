@@ -48,3 +48,26 @@ std::string Piece::colorToSpriteName(const Piece::COLORS color)
     };
     return "";
 }
+
+Piece::COLORS Piece::getNextColor(const COLORS& currentColor) 
+{
+    switch (currentColor) {
+        case BLACK:
+            return WHITE;
+            break;
+        case WHITE:
+            return YELLOW;
+            break;
+        case YELLOW:
+            return GREEN;
+            break;
+        case GREEN:
+            return RED;
+            break;
+        case RED:
+            return HIGHEST_COLOR;
+            break;
+        default:
+            return BLACK;
+    };
+}

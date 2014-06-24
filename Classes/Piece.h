@@ -21,9 +21,11 @@ public:
         WHITE,
         YELLOW,
         GREEN,
-        RED
+        RED,
+        HIGHEST_COLOR
     };
-
+    static COLORS getNextColor(const COLORS& currentColor);
+    
 public:
     Piece();
     COLORS getColor() const;

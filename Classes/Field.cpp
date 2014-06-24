@@ -70,12 +70,30 @@ void Field::moveField(const Field::MOVE_DIRECTION direction)
             return;
     }
     addRandomWarrior();
+    redrawField();
+}
+
+//----------------------------------------------------------------------------------------------------------
+void Field::redrawField()
+{
+    for (int w = 0; w < FIELD_WIDTH; ++w) {
+        for (int h = 0; h < FIELD_HEIGHT; ++h) {
+            mFieldMap[w][h]->setTexture(Piece::colorToSpriteName(mField[w][h]));
+        }
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------
 void Field::moveLeft()
 {
-    
+    for (int h = 0; h < FIELD_HEIGHT; ++h) {
+        for (int w = 1; w < FIELD_WIDTH; w += 2) {
+            Piece::COLORS currentPiece = mField[w][h];
+            if (currentPiece != Piece::COLORS::BLACK) {
+
+            }
+        }
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------
