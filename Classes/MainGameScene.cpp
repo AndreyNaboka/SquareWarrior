@@ -2,8 +2,6 @@
 
 USING_NS_CC;
 
-#define DEBUG
-
 Scene* MainGameScene::createScene()
 {
     auto scene = Scene::create();
@@ -37,7 +35,6 @@ bool MainGameScene::init()
     
     /// Movement direction
     const cocos2d::Vec2 centerOfScreen = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2), mOrigin.y + (mVisibleSize.height / 2));
-    mPrevTouch = centerOfScreen;
     
     mUpDirection = cocos2d::Vec2(mOrigin.x + (mVisibleSize.width / 2.0), mOrigin.y + mVisibleSize.height);
     mUpDirection = centerOfScreen - mUpDirection;
@@ -63,48 +60,50 @@ bool MainGameScene::init()
 
 Field::MOVE_DIRECTION MainGameScene::proceedTouches(const std::vector<cocos2d::Touch *> &touches)
 {
-    if ((*touches.begin())->getLocation().distance(mPrevTouch) < 10.0f)
-        return Field::UNKNOWN;
-    
-    return Field::LEFT;
-    
-    cocos2d::Vec2 touch = (*touches.begin())->getLocation();
-    cocos2d::Vec2 touchToPrevTouch = mPrevTouch - touch;
-    touchToPrevTouch.normalize();
-    mPrevTouch = touch;
-    
-    float angleBetweenUp    = acos(cocos2d::Vec2::dot(mUpDirection,    touchToPrevTouch));
-    float angleBetweenDown  = acos(cocos2d::Vec2::dot(mDownDirection,  touchToPrevTouch));
-    float angleBetweenLeft  = acos(cocos2d::Vec2::dot(mLeftDirection,  touchToPrevTouch));
-    float angleBetweenRight = acos(cocos2d::Vec2::dot(mRightDirection, touchToPrevTouch));
+    mTouches.push_back((*touches.begin())->getLocation());
+    if (mTouches.size() >= 2)
+    {
+        if (mTouches.at(0).distance(mTouches.at(1)) < 10.0f)
+            return Field::MOVE_DIRECTION::UNKNOWN;
+        
+        cocos2d::Vec2 touch = mTouches.at(1);// (*touches.begin())->getLocation();
+        cocos2d::Vec2 touchToPrevTouch = mTouches.at(0) - touch;
+        touchToPrevTouch.normalize();
+        
+        float angleBetweenUp    = acos(cocos2d::Vec2::dot(mUpDirection,    touchToPrevTouch));
+        float angleBetweenDown  = acos(cocos2d::Vec2::dot(mDownDirection,  touchToPrevTouch));
+        float angleBetweenLeft  = acos(cocos2d::Vec2::dot(mLeftDirection,  touchToPrevTouch));
+        float angleBetweenRight = acos(cocos2d::Vec2::dot(mRightDirection, touchToPrevTouch));
 
-    
-    
-    if (angleBetweenDown < angleBetweenUp &&
-        angleBetweenDown < angleBetweenLeft &&
-        angleBetweenDown < angleBetweenRight)
-        mDirection = Field::MOVE_DIRECTION::BOTTOM;
-    
-    else if (angleBetweenUp < angleBetweenDown &&
-             angleBetweenUp < angleBetweenLeft &&
-             angleBetweenUp < angleBetweenRight)
-        mDirection = Field::MOVE_DIRECTION::TOP;
-    
-    else if (angleBetweenLeft < angleBetweenDown &&
-             angleBetweenLeft < angleBetweenRight &&
-             angleBetweenLeft < angleBetweenUp)
-        mDirection = Field::MOVE_DIRECTION::LEFT;
-    
-    else if (angleBetweenRight < angleBetweenDown &&
-             angleBetweenRight < angleBetweenLeft &&
-             angleBetweenRight < angleBetweenUp)
-        mDirection = Field::MOVE_DIRECTION::RIGHT;
-    
-#ifdef DEBUG
-    std::cout << "Direction: " << Field::directionToString(mDirection) << std::endl;
-#endif
-    
-    return mDirection;
+        Field::MOVE_DIRECTION direction;
+
+        
+        if (angleBetweenDown < angleBetweenUp &&
+            angleBetweenDown < angleBetweenLeft &&
+            angleBetweenDown < angleBetweenRight)
+            direction = Field::MOVE_DIRECTION::BOTTOM;
+        
+        else if (angleBetweenUp < angleBetweenDown &&
+                 angleBetweenUp < angleBetweenLeft &&
+                 angleBetweenUp < angleBetweenRight)
+            direction = Field::MOVE_DIRECTION::TOP;
+        
+        else if (angleBetweenLeft < angleBetweenDown &&
+                 angleBetweenLeft < angleBetweenRight &&
+                 angleBetweenLeft < angleBetweenUp)
+            direction = Field::MOVE_DIRECTION::LEFT;
+        
+        else if (angleBetweenRight < angleBetweenDown &&
+                 angleBetweenRight < angleBetweenLeft &&
+                 angleBetweenRight < angleBetweenUp)
+            direction = Field::MOVE_DIRECTION::RIGHT;
+        
+        
+        mMovingNow = true;
+        mTouches.clear();
+        return direction;
+    }
+    return Field::MOVE_DIRECTION::UNKNOWN;
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -118,8 +117,6 @@ void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, 
 void MainGameScene::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
     if (mMovingNow) return;
-    
-    mMovingNow = true;
     
     Field::MOVE_DIRECTION direction = proceedTouches(touches);
     if (direction != Field::UNKNOWN)

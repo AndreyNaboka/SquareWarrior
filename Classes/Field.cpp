@@ -50,16 +50,9 @@ Field::Field(cocos2d::Layer* layer)
     }
     
     
-    /// Debug
-//    mField[0][0] = Piece::COLORS::WHITE;
-//    mField[1][0] = Piece::COLORS::WHITE;
-//    mField[2][0] = Piece::COLORS::WHITE;
-//    mField[3][0] = Piece::COLORS::WHITE;
-
-    redrawField();
-    /////////////////////////////////////////
-    
     addRandomWarrior();
+    
+    redrawField();
 }
 
 /**********************************************************/
@@ -73,24 +66,23 @@ void Field::update(const float delta)
 
 void Field::moveField(const Field::MOVE_DIRECTION direction)
 {
-    moveRight();
-//    switch (direction)
-//    {
-//        case LEFT:
-//            moveLeft();
-//            break;
-//        case RIGHT:
-//            moveRight();
-//            break;
-//        case TOP:
-//            moveTop();
-//            break;
-//        case BOTTOM:
-//            moveBottom();
-//            break;
-//        default:
-//            return;
-//    }
+    switch (direction)
+    {
+        case LEFT:
+            moveLeft();
+            break;
+        case RIGHT:
+            moveRight();
+            break;
+        case TOP:
+            moveTop();
+            break;
+        case BOTTOM:
+            moveBottom();
+            break;
+        default:
+            return;
+    }
     addRandomWarrior();
     redrawField();
 }
