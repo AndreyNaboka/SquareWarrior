@@ -45,6 +45,7 @@ private:
         coord(const int width, const int height) : w(width), h(height) {}
     };
     void getPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
+    void addingPairs(const std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
     
 private:
     cocos2d::Layer* mLayer;

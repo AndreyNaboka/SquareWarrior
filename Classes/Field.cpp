@@ -73,7 +73,7 @@ void Field::update(const float delta)
 
 void Field::moveField(const Field::MOVE_DIRECTION direction)
 {
-    moveLeft();
+    moveRight();
 //    switch (direction)
 //    {
 //        case LEFT:
@@ -113,17 +113,8 @@ void Field::moveLeft()
     std::vector<std::pair<Field::coord, Field::coord> > listOfPairs;
     getPairs(listOfPairs);
     
-    if (listOfPairs.size())
-    {
-        // Adding pairs
-        for (auto pair = listOfPairs.begin(); pair != listOfPairs.end(); ++pair)
-        {
-            mField[pair->second.w][pair->second.h] = Piece::getNextColor(mField[pair->second.w][pair->second.h]);
-            mField[pair->first.w][pair->first.h] = Piece::COLORS::BLACK;
-        }
-    }
-    
-    
+    addingPairs(listOfPairs);
+
     // Move all pieces to left
     for (int h = 0; h < FIELD_HEIGHT; ++h)
     {
@@ -141,7 +132,7 @@ void Field::moveLeft()
         {
             for (auto piece = pieces.begin(); piece != pieces.end(); ++piece)
             {
-                int index = std::distance(pieces.begin(), piece);
+                const int index = std::distance(pieces.begin(), piece);
                 mField[index][h] = *piece;
             }
         }
@@ -152,17 +143,32 @@ void Field::moveLeft()
 
 void Field::moveRight()
 {
+    std::vector<std::pair<Field::coord, Field::coord> > listOfPairs;
+    getPairs(listOfPairs);
+    
+    addingPairs(listOfPairs);
+    
     for (int h = 0; h < FIELD_HEIGHT; ++h)
     {
-//        std::vector<std::pair<int, int> > listOfPairs;
-//        getHorizontalPairs(listOfPairs);
+        std::vector<Piece::COLORS> pieces;
+        for (int w = 0; w < FIELD_WIDTH; ++w)
+        {
+            if (mField[w][h] != Piece::COLORS::BLACK)
+            {
+                pieces.push_back(mField[w][h]);
+                mField[w][h] = Piece::COLORS::BLACK;
+            }
+        }
         
-//        if (listOfPairs.size())
-//        {
-        
-//        }
+        if (pieces.size())
+        {
+            for (auto piece = pieces.rbegin(); piece != pieces.rend(); ++piece)
+            {
+                const int index = FIELD_WIDTH - std::distance(pieces.rbegin(), piece) - 1;
+                mField[index][h] = *piece;
+            }
+        }
     }
-
 }
 
 /**********************************************************/
@@ -250,6 +256,20 @@ void Field::getPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOf
                 }
          
             }
+        }
+    }
+}
+
+/**********************************************************/
+void Field::addingPairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
+{
+    if (listOfPairs.size())
+    {
+        // Adding pairs
+        for (auto pair = listOfPairs.begin(); pair != listOfPairs.end(); ++pair)
+        {
+            mField[pair->second.w][pair->second.h] = Piece::getNextColor(mField[pair->second.w][pair->second.h]);
+            mField[pair->first.w][pair->first.h] = Piece::COLORS::BLACK;
         }
     }
 }
