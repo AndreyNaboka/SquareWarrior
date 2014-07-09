@@ -90,7 +90,9 @@ void Field::redrawField()
     {
         for (int h = 0; h < FIELD_HEIGHT; ++h)
         {
-            mFieldMap[w][h]->setTexture(Piece::colorToSpriteName(mField[w][h]));
+            const std::string newTextureFilename = Piece::colorToSpriteName(mField[w][h]);
+            if (newTextureFilename != "unknown")
+                mFieldMap[w][h]->setTexture(newTextureFilename);
         }
     }
 }
@@ -99,10 +101,12 @@ void Field::redrawField()
 void Field::moveLeft()
 {
     std::vector<std::pair<Field::coord, Field::coord> > listOfPairs;
+    
     collectHorizontalPairs(listOfPairs);
     
     combineHorizontalPairs(listOfPairs);
 
+    
     // Move all pieces to left
     for (int h = 0; h < FIELD_HEIGHT; ++h)
     {
@@ -287,7 +291,8 @@ void Field::collectVerticalPairs(std::vector<std::pair<Field::coord, Field::coor
             {
                 for (int relativeH = h+1; relativeH < FIELD_HEIGHT; ++relativeH)
                 {
-                    if (mField[w][relativeH] == mField[w][h])
+                    if (mField[w][relativeH] == mField[w][h] &&
+                        mField[w][relativeH] != Piece::COLORS::RED)
                     {
                         Field::coord c1(w, relativeH);
                         Field::coord c2(w, h);
@@ -313,7 +318,8 @@ void Field::collectHorizontalPairs(std::vector<std::pair<Field::coord, Field::co
             {
                 for (int relativeW = w+1; relativeW < FIELD_WIDTH; ++relativeW)
                 {
-                    if (mField[relativeW][h] == mField[w][h])
+                    if (mField[relativeW][h] == mField[w][h] &&
+                        mField[relativeW][h] != Piece::COLORS::RED)
                     {
                         Field::coord c1(relativeW, h);
                         Field::coord c2(w, h);
