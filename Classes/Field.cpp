@@ -10,8 +10,6 @@
 #include <iostream>
 
 /**********************************************************/
-/// Init field and textures map
-
 Field::Field(cocos2d::Layer* layer)
     :mLayer(layer)
 {
@@ -56,33 +54,32 @@ Field::Field(cocos2d::Layer* layer)
 }
 
 /**********************************************************/
-
 void Field::update(const float delta)
 {
     
 }
 
 /**********************************************************/
-
 void Field::moveField(const Field::MOVE_DIRECTION direction)
 {
-    switch (direction)
-    {
-        case LEFT:
-            moveLeft();
-            break;
-        case RIGHT:
-            moveRight();
-            break;
-        case TOP:
-            moveTop();
-            break;
-        case BOTTOM:
-            moveBottom();
-            break;
-        default:
-            return;
-    }
+    moveTop();
+//    switch (direction)
+//    {
+//        case LEFT:
+//            moveLeft();
+//            break;
+//        case RIGHT:
+//            moveRight();
+//            break;
+//        case TOP:
+//            moveTop();
+//            break;
+//        case BOTTOM:
+//            moveBottom();
+//            break;
+//        default:
+//            return;
+//    }
     addRandomWarrior();
     redrawField();
 }
@@ -103,9 +100,9 @@ void Field::redrawField()
 void Field::moveLeft()
 {
     std::vector<std::pair<Field::coord, Field::coord> > listOfPairs;
-    getPairs(listOfPairs);
+    collectHorizontalPairs(listOfPairs);
     
-    addingPairs(listOfPairs);
+    combineHorizontalPairs(listOfPairs);
 
     // Move all pieces to left
     for (int h = 0; h < FIELD_HEIGHT; ++h)
@@ -132,14 +129,16 @@ void Field::moveLeft()
 }
 
 /**********************************************************/
-
 void Field::moveRight()
 {
     std::vector<std::pair<Field::coord, Field::coord> > listOfPairs;
-    getPairs(listOfPairs);
+   
+    collectHorizontalPairs(listOfPairs);
     
-    addingPairs(listOfPairs);
+    combineHorizontalPairs(listOfPairs);
     
+    
+    // Move right
     for (int h = 0; h < FIELD_HEIGHT; ++h)
     {
         std::vector<Piece::COLORS> pieces;
@@ -164,21 +163,46 @@ void Field::moveRight()
 }
 
 /**********************************************************/
-
 void Field::moveTop()
 {
+    std::vector<std::pair<Field::coord, Field::coord> > listOfPairs;
     
+    collectVerticalPairs(listOfPairs);
+    
+    combineVerticalPairs(listOfPairs);
+    
+    
+    // Move top
+    for (int w = 0; w < FIELD_WIDTH; ++w)
+    {
+        std::vector<Piece::COLORS> pieces;
+        for (int h = 0; h < FIELD_HEIGHT; ++h)
+        {
+            if (mField[w][h] != Piece::COLORS::BLACK)
+            {
+                pieces.push_back(mField[w][h]);
+                mField[w][h] = Piece::COLORS::BLACK;
+            }
+        }
+        
+        if (pieces.size())
+        {
+            int index = 0;
+            for (auto piece = pieces.begin(); piece != pieces.end(); ++piece, index++)
+            {
+                mField[w][index] = *piece;
+            }
+        }
+    }
 }
 
 /**********************************************************/
-
 void Field::moveBottom()
 {
     
 }
 
 /**********************************************************/
-/// Add new square to random position
 void Field::addRandomWarrior(const int num)
 {
     std::vector<cocos2d::Vec2> freePieces;
@@ -203,7 +227,6 @@ void Field::addRandomWarrior(const int num)
 }
 
 /**********************************************************/
-/// Convert direction to string
 std::string Field::directionToString(const Field::MOVE_DIRECTION &direction)
 {
     switch (direction)
@@ -227,7 +250,33 @@ std::string Field::directionToString(const Field::MOVE_DIRECTION &direction)
 }
 
 /**********************************************************/
-void Field::getPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs)
+void Field::collectVerticalPairs(std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
+{
+    for (int w = 0; w < FIELD_WIDTH; ++w)
+    {
+        for (int h = 0; h < FIELD_HEIGHT; ++h)
+        {
+            if (mField[w][h] != Piece::COLORS::BLACK)
+            {
+                for (int relativeH = h+1; relativeH < FIELD_HEIGHT; ++relativeH)
+                {
+                    if (mField[w][relativeH] == mField[w][h])
+                    {
+                        Field::coord c1(w, relativeH);
+                        Field::coord c2(w, h);
+                        listOfPairs.push_back(std::make_pair(c1, c2));
+                        h = relativeH;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+/**********************************************************/
+void Field::collectHorizontalPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs)
 {
     for (int h = 0; h < FIELD_HEIGHT; ++h)
     {
@@ -253,7 +302,7 @@ void Field::getPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOf
 }
 
 /**********************************************************/
-void Field::addingPairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
+void Field::combineHorizontalPairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
 {
     if (listOfPairs.size())
     {
@@ -265,3 +314,23 @@ void Field::addingPairs(const std::vector<std::pair<Field::coord, Field::coord> 
         }
     }
 }
+
+/**********************************************************/
+void Field::combineVerticalPairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
+{
+    if (listOfPairs.size())
+    {
+        for (auto pair = listOfPairs.begin(); pair != listOfPairs.end(); ++pair)
+        {
+            mField[pair->second.w][pair->second.h] = Piece::getNextColor(mField[pair->second.w][pair->second.h]);
+            mField[pair->first.w][pair->first.h] = Piece::COLORS::BLACK;
+        }
+    }
+}
+
+
+
+
+
+
+

@@ -8,23 +8,26 @@
 
 #include "Piece.h"
 
+/**********************************************************/
 Piece::Piece()
     :mColor(BLACK)
 {
 }
 
+/**********************************************************/
 Piece::COLORS Piece::getColor() const
 {
     return mColor;
 }
 
+/**********************************************************/
 void Piece::setColor(const Piece::COLORS color)
 {
     if (mColor == color) return;
     mColor = color;
 }
 
-
+/**********************************************************/
 std::string Piece::colorToSpriteName(const Piece::COLORS color)
 {
     switch (color) {
@@ -49,6 +52,7 @@ std::string Piece::colorToSpriteName(const Piece::COLORS color)
     return "";
 }
 
+/**********************************************************/
 Piece::COLORS Piece::getNextColor(const COLORS& currentColor) 
 {
     switch (currentColor) {

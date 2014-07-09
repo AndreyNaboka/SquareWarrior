@@ -2,6 +2,7 @@
 
 USING_NS_CC;
 
+/**********************************************************/
 Scene* MainGameScene::createScene()
 {
     auto scene = Scene::create();
@@ -10,8 +11,7 @@ Scene* MainGameScene::createScene()
     return scene;
 }
 
-//----------------------------------------------------------------------------------------------------------
-
+/**********************************************************/
 bool MainGameScene::init()
 {
     mVisibleSize = Director::getInstance()->getVisibleSize();
@@ -56,8 +56,7 @@ bool MainGameScene::init()
 }
 
 
-//----------------------------------------------------------------------------------------------------------
-
+/**********************************************************/
 Field::MOVE_DIRECTION MainGameScene::proceedTouches(const std::vector<cocos2d::Touch *> &touches)
 {
     mTouches.push_back((*touches.begin())->getLocation());
@@ -106,14 +105,12 @@ Field::MOVE_DIRECTION MainGameScene::proceedTouches(const std::vector<cocos2d::T
     return Field::MOVE_DIRECTION::UNKNOWN;
 }
 
-//----------------------------------------------------------------------------------------------------------
-
+/**********************************************************/
 void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
 }
 
-//----------------------------------------------------------------------------------------------------------
-
+/**********************************************************/
 void MainGameScene::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
     if (mMovingNow) return;
@@ -123,15 +120,13 @@ void MainGameScene::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, 
         mField->moveField(direction);
 }
 
-//----------------------------------------------------------------------------------------------------------
-
+/**********************************************************/
 void MainGameScene::onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
     mMovingNow = false;
 }
 
-//----------------------------------------------------------------------------------------------------------
-
+/**********************************************************/
 void MainGameScene::update(const float delta)
 {
 }
