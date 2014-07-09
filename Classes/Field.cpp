@@ -62,24 +62,23 @@ void Field::update(const float delta)
 /**********************************************************/
 void Field::moveField(const Field::MOVE_DIRECTION direction)
 {
-    moveTop();
-//    switch (direction)
-//    {
-//        case LEFT:
-//            moveLeft();
-//            break;
-//        case RIGHT:
-//            moveRight();
-//            break;
-//        case TOP:
-//            moveTop();
-//            break;
-//        case BOTTOM:
-//            moveBottom();
-//            break;
-//        default:
-//            return;
-//    }
+    switch (direction)
+    {
+        case LEFT:
+            moveLeft();
+            break;
+        case RIGHT:
+            moveRight();
+            break;
+        case TOP:
+            moveTop();
+            break;
+        case BOTTOM:
+            moveBottom();
+            break;
+        default:
+            return;
+    }
     addRandomWarrior();
     redrawField();
 }
@@ -199,7 +198,35 @@ void Field::moveTop()
 /**********************************************************/
 void Field::moveBottom()
 {
+    std::vector<std::pair<Field::coord, Field::coord> > listOfPairs;
     
+    collectVerticalPairs(listOfPairs);
+    
+    combineVerticalPairs(listOfPairs);
+    
+    
+    // Move bottom
+    for (int w = 0; w < FIELD_WIDTH; ++w)
+    {
+        std::vector<Piece::COLORS> pieces;
+        for (int h = 0; h < FIELD_HEIGHT; ++h)
+        {
+            if (mField[w][h] != Piece::COLORS::BLACK)
+            {
+                pieces.push_back(mField[w][h]);
+                mField[w][h] = Piece::COLORS::BLACK;
+            }
+        }
+        
+        if (pieces.size())
+        {
+            int index = 0;
+            for (auto piece = pieces.rbegin(); piece != pieces.rend(); ++piece, index++)
+            {
+                mField[w][FIELD_WIDTH - 1 - index] = *piece;
+            }
+        }
+    }
 }
 
 /**********************************************************/
