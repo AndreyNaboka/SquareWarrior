@@ -46,8 +46,8 @@ private:
     };
     void collectHorizontalPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
     void collectVerticalPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
-    void combineHorizontalPairs(const std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
-    void combineVerticalPairs(const std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
+//    void combineHorizontalPairs(const std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
+    void combinePairs(const std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
     
 private:
     cocos2d::Layer* mLayer;

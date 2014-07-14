@@ -38,8 +38,8 @@ Field::Field(cocos2d::Layer* layer)
             mField[w][h] = Piece::COLORS::BLACK;
             
             mFieldMap[w][h] = cocos2d::Sprite::create(Piece::colorToSpriteName(Piece::COLORS::BLACK));
-            const float cellSpriteWidth = mFieldMap[w][h]->getContentSize().width;
-            const float cellSpriteHeight = mFieldMap[w][h]->getContentSize().height;
+            const float cellSpriteWidth = 64;//mFieldMap[w][h]->getContentSize().width;
+            const float cellSpriteHeight = 64;//mFieldMap[w][h]->getContentSize().height;
 
             mFieldMap[w][h]->setScale(cellWidth / cellSpriteWidth, cellHeight / cellSpriteHeight);
             mFieldMap[w][h]->setPosition(cellWidth * w + (cellWidth/2), topStartPosY - (cellHeight * h) - (cellHeight/2));
@@ -104,7 +104,7 @@ void Field::moveLeft()
     
     collectHorizontalPairs(listOfPairs);
     
-    combineHorizontalPairs(listOfPairs);
+    combinePairs(listOfPairs);
 
     
     // Move all pieces to left
@@ -124,7 +124,7 @@ void Field::moveLeft()
         {
             for (auto piece = pieces.begin(); piece != pieces.end(); ++piece)
             {
-                const int index = std::distance(pieces.begin(), piece);
+                const long index = std::distance(pieces.begin(), piece);
                 mField[index][h] = *piece;
             }
         }
@@ -138,7 +138,7 @@ void Field::moveRight()
    
     collectHorizontalPairs(listOfPairs);
     
-    combineHorizontalPairs(listOfPairs);
+    combinePairs(listOfPairs);
     
     
     // Move right
@@ -158,7 +158,7 @@ void Field::moveRight()
         {
             for (auto piece = pieces.rbegin(); piece != pieces.rend(); ++piece)
             {
-                const int index = FIELD_WIDTH - std::distance(pieces.rbegin(), piece) - 1;
+                const long index = FIELD_WIDTH - std::distance(pieces.rbegin(), piece) - 1;
                 mField[index][h] = *piece;
             }
         }
@@ -172,7 +172,7 @@ void Field::moveTop()
     
     collectVerticalPairs(listOfPairs);
     
-    combineVerticalPairs(listOfPairs);
+    combinePairs(listOfPairs);
     
     
     // Move top
@@ -206,7 +206,7 @@ void Field::moveBottom()
     
     collectVerticalPairs(listOfPairs);
     
-    combineVerticalPairs(listOfPairs);
+    combinePairs(listOfPairs);
     
     
     // Move bottom
@@ -224,10 +224,10 @@ void Field::moveBottom()
         
         if (pieces.size())
         {
-            int index = 0;
-            for (auto piece = pieces.rbegin(); piece != pieces.rend(); ++piece, index++)
+            for (auto piece = pieces.rbegin(); piece != pieces.rend(); ++piece)
             {
-                mField[w][FIELD_WIDTH - 1 - index] = *piece;
+                const long index = FIELD_HEIGHT - std::distance(pieces.rbegin(), piece) - 1;
+                mField[w][index] = *piece;
             }
         }
     }
@@ -247,14 +247,18 @@ void Field::addRandomWarrior(const int num)
     }
     
     if (freePieces.size() == 0)
+    {
+        std::cout << "GAME OVER" << std::endl;
         return;
+    }
+    
     
     
     int randomIndex = rand() % freePieces.size();
     const int x = freePieces.at(randomIndex).x;
     const int y = freePieces.at(randomIndex).y;
-    mField[x][y] = Piece::COLORS::WHITE;
-    mFieldMap[x][y]->setTexture(Piece::colorToSpriteName(Piece::WHITE));
+    mField[x][y] = Piece::COLORS::COLOR_2;
+    mFieldMap[x][y]->setTexture(Piece::colorToSpriteName(Piece::COLOR_2));
 }
 
 /**********************************************************/
@@ -292,7 +296,7 @@ void Field::collectVerticalPairs(std::vector<std::pair<Field::coord, Field::coor
                 for (int relativeH = h+1; relativeH < FIELD_HEIGHT; ++relativeH)
                 {
                     if (mField[w][relativeH] == mField[w][h] &&
-                        mField[w][relativeH] != Piece::COLORS::RED)
+                        mField[w][relativeH] != Piece::COLORS::COLOR_2048)
                     {
                         Field::coord c1(w, relativeH);
                         Field::coord c2(w, h);
@@ -319,7 +323,7 @@ void Field::collectHorizontalPairs(std::vector<std::pair<Field::coord, Field::co
                 for (int relativeW = w+1; relativeW < FIELD_WIDTH; ++relativeW)
                 {
                     if (mField[relativeW][h] == mField[w][h] &&
-                        mField[relativeW][h] != Piece::COLORS::RED)
+                        mField[relativeW][h] != Piece::COLORS::COLOR_2048)
                     {
                         Field::coord c1(relativeW, h);
                         Field::coord c2(w, h);
@@ -334,22 +338,22 @@ void Field::collectHorizontalPairs(std::vector<std::pair<Field::coord, Field::co
     }
 }
 
-/**********************************************************/
-void Field::combineHorizontalPairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
-{
-    if (listOfPairs.size())
-    {
-        // Adding pairs
-        for (auto pair = listOfPairs.begin(); pair != listOfPairs.end(); ++pair)
-        {
-            mField[pair->second.w][pair->second.h] = Piece::getNextColor(mField[pair->second.w][pair->second.h]);
-            mField[pair->first.w][pair->first.h] = Piece::COLORS::BLACK;
-        }
-    }
-}
+///**********************************************************/
+//void Field::combineHorizontalPairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
+//{
+//    if (listOfPairs.size())
+//    {
+//        // Adding pairs
+//        for (auto pair = listOfPairs.begin(); pair != listOfPairs.end(); ++pair)
+//        {
+//            mField[pair->second.w][pair->second.h] = Piece::getNextColor(mField[pair->second.w][pair->second.h]);
+//            mField[pair->first.w][pair->first.h] = Piece::COLORS::BLACK;
+//        }
+//    }
+//}
 
 /**********************************************************/
-void Field::combineVerticalPairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
+void Field::combinePairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
 {
     if (listOfPairs.size())
     {

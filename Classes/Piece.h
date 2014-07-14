@@ -18,10 +18,17 @@ class Piece {
 public:
     enum COLORS {
         BLACK,
-        WHITE,
-        YELLOW,
-        GREEN,
-        RED,
+        COLOR_2,
+        COLOR_4,
+        COLOR_8,
+        COLOR_16,
+        COLOR_32,
+        COLOR_64,
+        COLOR_128,
+        COLOR_256,
+        COLOR_512,
+        COLOR_1024,
+        COLOR_2048,
         HIGHEST_COLOR
     };
     static COLORS getNextColor(const COLORS& currentColor);
