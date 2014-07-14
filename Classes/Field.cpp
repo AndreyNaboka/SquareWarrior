@@ -295,6 +295,15 @@ void Field::collectVerticalPairs(std::vector<std::pair<Field::coord, Field::coor
             {
                 for (int relativeH = h+1; relativeH < FIELD_HEIGHT; ++relativeH)
                 {
+                    // Can't make pair, cause nearest piece have anonther number
+                    if (mField[w][relativeH] != mField[w][h] &&
+                        mField[w][relativeH] != Piece::COLORS::COLOR_2048 &&
+                        mField[w][relativeH] != Piece::COLORS::BLACK)
+                    {
+                        break;
+                    }
+                    
+                    // Nearest pieces is eqaul - make pair
                     if (mField[w][relativeH] == mField[w][h] &&
                         mField[w][relativeH] != Piece::COLORS::COLOR_2048)
                     {
@@ -322,6 +331,13 @@ void Field::collectHorizontalPairs(std::vector<std::pair<Field::coord, Field::co
             {
                 for (int relativeW = w+1; relativeW < FIELD_WIDTH; ++relativeW)
                 {
+                    if (mField[relativeW][h] != mField[w][h] &&
+                        mField[relativeW][h] != Piece::COLORS::COLOR_2048 &&
+                        mField[relativeW][h] != Piece::COLORS::BLACK)
+                    {
+                        break;
+                    }
+                    
                     if (mField[relativeW][h] == mField[w][h] &&
                         mField[relativeW][h] != Piece::COLORS::COLOR_2048)
                     {
