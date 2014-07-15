@@ -52,6 +52,9 @@ bool MainGameScene::init()
     mRightDirection = centerOfScreen - mRightDirection;
     mRightDirection.normalize();
     
+    
+    createGameObjects();
+    
     return true;
 }
 
@@ -134,4 +137,30 @@ void MainGameScene::onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, 
 /**********************************************************/
 void MainGameScene::update(const float delta)
 {
+}
+
+
+void MainGameScene::createGameObjects()
+{
+    // Enemy prepare
+    cocos2d::Sprite* enemy = cocos2d::Sprite::create("boss.png");
+    enemy->setScale(((mVisibleSize.width + 2) / enemy->getContentSize().width),
+                    (mVisibleSize.height * 0.2) / enemy->getContentSize().height);
+    enemy->setPosition((mVisibleSize.width / 2) + (enemy->getContentSize().width / 2),
+                       (mField->getTopPosition()) + (enemy->getContentSize().height / 2 * enemy->getScaleY()));
+    addChild(enemy);
+    
+    
+    // Create score label
+    char scoreText[256];
+    snprintf(scoreText, 256, "2048");
+    mScoreLabel = cocos2d::Label::createWithSystemFont(std::string(scoreText),
+                                                       "",
+                                                       50);
+    mScoreLabel->setColor(cocos2d::Color3B(255,255,255));
+    mScoreLabel->setPosition(mVisibleSize.width / 2,
+                             enemy->getPositionY());
+    addChild(mScoreLabel);
+    
+    
 }

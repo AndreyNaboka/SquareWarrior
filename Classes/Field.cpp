@@ -27,9 +27,7 @@ Field::Field(cocos2d::Layer* layer)
     const float cellWidth = visibleSize.width / 4;
     const float cellHeight = cellWidth;
     const float topStartPosY = cellHeight * 4;
-    
-    
-
+    mPiecesTopPosition = topStartPosY;
     
     for (int w = 0; w < FIELD_WIDTH; ++w)
     {
@@ -46,7 +44,6 @@ Field::Field(cocos2d::Layer* layer)
             mLayer->addChild(mFieldMap[w][h]);
         }
     }
-    
     
     addRandomWarrior();
     
@@ -354,20 +351,6 @@ void Field::collectHorizontalPairs(std::vector<std::pair<Field::coord, Field::co
     }
 }
 
-///**********************************************************/
-//void Field::combineHorizontalPairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
-//{
-//    if (listOfPairs.size())
-//    {
-//        // Adding pairs
-//        for (auto pair = listOfPairs.begin(); pair != listOfPairs.end(); ++pair)
-//        {
-//            mField[pair->second.w][pair->second.h] = Piece::getNextColor(mField[pair->second.w][pair->second.h]);
-//            mField[pair->first.w][pair->first.h] = Piece::COLORS::BLACK;
-//        }
-//    }
-//}
-
 /**********************************************************/
 void Field::combinePairs(const std::vector<std::pair<Field::coord, Field::coord> > &listOfPairs)
 {
@@ -381,7 +364,11 @@ void Field::combinePairs(const std::vector<std::pair<Field::coord, Field::coord>
     }
 }
 
-
+/**********************************************************/
+int Field::getTopPosition() const
+{
+    return mPiecesTopPosition;
+}
 
 
 

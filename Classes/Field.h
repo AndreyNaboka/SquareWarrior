@@ -29,6 +29,7 @@ public:
     Field(cocos2d::Layer *layer);
     void update(const float delta);
     void moveField(const MOVE_DIRECTION direction);
+    int getTopPosition() const;
     
 private:
     void addRandomWarrior(const int num = 1);
@@ -46,12 +47,10 @@ private:
     };
     void collectHorizontalPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
     void collectVerticalPairs(std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
-//    void combineHorizontalPairs(const std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
     void combinePairs(const std::vector<std::pair<Field::coord, Field::coord> >& listOfPairs);
-    
 private:
     cocos2d::Layer* mLayer;
-    
+    int mPiecesTopPosition;
     static const int FIELD_WIDTH = 4;
     static const int FIELD_HEIGHT = 4;
     Piece::COLORS mField[FIELD_WIDTH][FIELD_HEIGHT];
