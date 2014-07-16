@@ -45,6 +45,13 @@ Field::Field(cocos2d::Layer* layer)
         }
     }
     
+    
+    // Attack area
+    mTopAttackArea = topStartPosY;
+    mBottomAttackArea = mTopAttackArea - (cellHeight * 2);
+    mLeftAttackArea = cellWidth;
+    mRightAttackArea = cellWidth * 3;
+    
     addRandomWarrior();
     
     redrawField();
@@ -370,7 +377,17 @@ int Field::getTopPosition() const
     return mPiecesTopPosition;
 }
 
+/**********************************************************/
+bool Field::isTapIntoAttackArea(const float x, const float y) const
+{
+    if (x >= mLeftAttackArea && x <= mRightAttackArea && y <= mTopAttackArea && y >= mBottomAttackArea)
+        return true;
+    return false;
+}
 
-
-
+/**********************************************************/
+int Field::getDamage() const
+{
+    return Piece::getDamage(mField[1][0]) + Piece::getDamage(mField[2][0]);
+}
 

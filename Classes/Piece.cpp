@@ -28,6 +28,52 @@ void Piece::setColor(const Piece::COLORS color)
 }
 
 /**********************************************************/
+int Piece::getDamage(const Piece::COLORS& color)
+{
+    switch (color) {
+        case BLACK:
+            return 0;
+            break;
+        case COLOR_2:
+            return 2;
+            break;
+        case COLOR_4:
+            return 4;
+            break;
+        case COLOR_8:
+            return 8;
+            break;
+        case COLOR_16:
+            return 16;
+            break;
+        case COLOR_32:
+            return 32;
+            break;
+        case COLOR_64:
+            return 64;
+            break;
+        case COLOR_128:
+            return 128;
+            break;
+        case COLOR_256:
+            return 256;
+            break;
+        case COLOR_512:
+            return 512;
+            break;
+        case COLOR_1024:
+            return 1024;
+            break;
+        case COLOR_2048:
+            return 2048;
+            break;
+        default:
+            return 0;
+    };
+    return 0;
+}
+
+/**********************************************************/
 std::string Piece::colorToSpriteName(const Piece::COLORS color)
 {
     switch (color) {

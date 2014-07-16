@@ -18,7 +18,8 @@ bool MainGameScene::init()
     mOrigin      = Director::getInstance()->getVisibleOrigin();
     
     mMovingNow = false;
-    
+    mAttackWarriorsSelected = false;
+    mEnemyLife = 2048;
     mField.reset(new Field(this));
     
     /// Start update
@@ -61,7 +62,7 @@ bool MainGameScene::init()
 
 /**********************************************************/
 Field::MOVE_DIRECTION MainGameScene::proceedTouches(const std::vector<cocos2d::Touch *> &touches)
-{
+{    
     mTouches.push_back((*touches.begin())->getLocation());
     if (mTouches.size() >= 2)
     {
@@ -116,6 +117,7 @@ Field::MOVE_DIRECTION MainGameScene::proceedTouches(const std::vector<cocos2d::T
 /**********************************************************/
 void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
+    std::cout << "Touch began " << touches.at(0)->getLocation().x << ", " << touches.at(0)->getLocation().y << std::endl;
 }
 
 /**********************************************************/
@@ -139,28 +141,26 @@ void MainGameScene::update(const float delta)
 {
 }
 
-
+/**********************************************************/
 void MainGameScene::createGameObjects()
 {
     // Enemy prepare
-    cocos2d::Sprite* enemy = cocos2d::Sprite::create("boss.png");
-    enemy->setScale(((mVisibleSize.width + 2) / enemy->getContentSize().width),
-                    (mVisibleSize.height * 0.2) / enemy->getContentSize().height);
-    enemy->setPosition((mVisibleSize.width / 2) + (enemy->getContentSize().width / 2),
-                       (mField->getTopPosition()) + (enemy->getContentSize().height / 2 * enemy->getScaleY()));
-    addChild(enemy);
+    mEnemy = cocos2d::Sprite::create("boss.png");
+    mEnemy->setScale(((mVisibleSize.width + 2) / mEnemy->getContentSize().width),
+                    (mVisibleSize.height * 0.2) / mEnemy->getContentSize().height);
+    mEnemy->setPosition((mVisibleSize.width / 2) + (mEnemy->getContentSize().width / 2),
+                       (mField->getTopPosition()) + (mEnemy->getContentSize().height / 2 * mEnemy->getScaleY()));
+    addChild(mEnemy);
     
     
     // Create score label
     char scoreText[256];
-    snprintf(scoreText, 256, "2048");
+    snprintf(scoreText, 256, "%i", mEnemyLife);
     mScoreLabel = cocos2d::Label::createWithSystemFont(std::string(scoreText),
                                                        "",
                                                        50);
     mScoreLabel->setColor(cocos2d::Color3B(255,255,255));
     mScoreLabel->setPosition(mVisibleSize.width / 2,
-                             enemy->getPositionY());
+                             mEnemy->getPositionY());
     addChild(mScoreLabel);
-    
-    
 }

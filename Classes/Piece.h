@@ -40,6 +40,8 @@ public:
     void setColor(const COLORS color);
     int  getX() const { return mX; }
     int  getY() const { return mY; }
+   
+    static int  getDamage(const Piece::COLORS& color);
     
     static std::string colorToSpriteName(const Piece::COLORS color);
     

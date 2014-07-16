@@ -27,6 +27,7 @@ private:
     cocos2d::Vec2 mOrigin;
     
     cocos2d::Label* mScoreLabel;
+    cocos2d::Sprite* mEnemy;
     
     /// For movement direction check
     cocos2d::Vec2 mUpDirection;
@@ -36,7 +37,9 @@ private:
     
     std::vector<cocos2d::Vec2> mTouches;
     
+    bool mAttackWarriorsSelected;
     bool mMovingNow;
+    int mEnemyLife;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

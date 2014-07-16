@@ -30,7 +30,8 @@ public:
     void update(const float delta);
     void moveField(const MOVE_DIRECTION direction);
     int getTopPosition() const;
-    
+    bool isTapIntoAttackArea(const float x, const float y) const;
+    int getDamage() const;
 private:
     void addRandomWarrior(const int num = 1);
     void moveLeft();
@@ -55,6 +56,11 @@ private:
     static const int FIELD_HEIGHT = 4;
     Piece::COLORS mField[FIELD_WIDTH][FIELD_HEIGHT];
     cocos2d::Sprite* mFieldMap[FIELD_WIDTH][FIELD_HEIGHT];
+    
+    float mLeftAttackArea;
+    float mRightAttackArea;
+    float mTopAttackArea;
+    float mBottomAttackArea;
 };
 
 typedef std::shared_ptr<Field> FieldPtr;
