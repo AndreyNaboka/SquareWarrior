@@ -19,7 +19,7 @@ private:
     void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
     Field::MOVE_DIRECTION proceedTouches(const std::vector<cocos2d::Touch*>& touches);
     void createGameObjects();
-
+    void destroyEnemy(const int damage);
     
 private:
     FieldPtr mField;

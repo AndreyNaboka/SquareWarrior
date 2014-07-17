@@ -72,6 +72,7 @@ Field::MOVE_DIRECTION MainGameScene::proceedTouches(const std::vector<cocos2d::T
             return Field::MOVE_DIRECTION::UNKNOWN;
         }
 
+        mAttackWarriorsSelected = false;
         
         
         cocos2d::Vec2 touch = mTouches.at(1);// (*touches.begin())->getLocation();
@@ -117,8 +118,48 @@ Field::MOVE_DIRECTION MainGameScene::proceedTouches(const std::vector<cocos2d::T
 /**********************************************************/
 void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
 {
-    std::cout << "Touch began " << touches.at(0)->getLocation().x << ", " << touches.at(0)->getLocation().y << std::endl;
+    if (mAttackWarriorsSelected)
+    {
+        const float x = touches.at(0)->getLocation().x;
+        const float y = touches.at(0)->getLocation().y;
+        const float enemyWidth = mVisibleSize.width;//mEnemy->getContentSize().width;
+        const float enemyHeight = mEnemy->getContentSize().height * mEnemy->getScaleY();
+        const float enemyX = 0;
+        const float enemyY = mEnemy->getPositionY() - (mEnemy->getContentSize().height / 2);
+        
+        if (x > enemyX && x < enemyX + enemyWidth && y > enemyY && y < enemyY + enemyHeight)
+        {
+            std::cout << "Destroy enemy" << std::endl;
+            destroyEnemy(mField->getDamage());
+        }
+        else
+        {
+            std::cout << "Attack warriors selected, but you doesn't tap on boss, disable flag attack warriors selected" << std::endl;
+            std::cout << "Tap position: " << x << ", " << y << ", enemy position: " << enemyX << ", " << enemyY << ", enemy size: " << enemyWidth << ", " << enemyHeight << std::endl;
+        }
+        
+        mAttackWarriorsSelected = false;
+    }
+    
+    if (mField->isTapIntoAttackArea(touches.at(0)->getLocation().x, touches.at(0)->getLocation().y))
+    {
+        mAttackWarriorsSelected = true;
+        std::cout << "Tap on attack area" << std::endl;
+    }
 }
+
+/**********************************************************/
+void MainGameScene::destroyEnemy(const int damage)
+{
+    mEnemyLife -= damage;
+    if (mEnemyLife < 0)
+        mEnemyLife = 0;
+    
+    char enemyLife[256];
+    snprintf(enemyLife, 256, "%i", mEnemyLife);
+    mScoreLabel->setString(enemyLife);
+}
+
 
 /**********************************************************/
 void MainGameScene::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
