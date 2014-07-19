@@ -127,7 +127,7 @@ void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, 
         const float enemyX = 0;
         const float enemyY = mEnemy->getPositionY() - (mEnemy->getContentSize().height / 2);
         
-        if (x > enemyX && x < enemyX + enemyWidth && y > enemyY && y < enemyY + enemyHeight)
+        if (x >= enemyX && x <= enemyX + enemyWidth && y > enemyY - (enemyHeight / 2) && y < enemyY + (enemyHeight / 2))
         {
             std::cout << "Destroy enemy" << std::endl;
             destroyEnemy(mField->getDamage());
