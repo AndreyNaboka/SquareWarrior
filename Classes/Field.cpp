@@ -204,6 +204,14 @@ void Field::moveTop()
 }
 
 /**********************************************************/
+void Field::sendWarriorsToAttack()
+{
+    mField[1][0] = Piece::COLORS::BLACK;
+    mField[2][0] = Piece::COLORS::BLACK;
+    redrawField();
+}
+
+/**********************************************************/
 void Field::moveBottom()
 {
     std::vector<std::pair<Field::coord, Field::coord> > listOfPairs;
@@ -388,6 +396,12 @@ bool Field::isTapIntoAttackArea(const float x, const float y) const
 /**********************************************************/
 int Field::getDamage() const
 {
-    return Piece::getDamage(mField[1][0]) + Piece::getDamage(mField[2][0]);
+    int damage = 0;
+    if (Piece::getDamage(mField[1][0]) > 128)
+        damage += Piece::getDamage(mField[1][0]);
+    if (Piece::getDamage(mField[2][0]) > 128)
+        damage += Piece::getDamage(mField[1][0]);
+    
+    return damage;
 }
 
