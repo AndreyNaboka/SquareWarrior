@@ -397,9 +397,9 @@ bool Field::isTapIntoAttackArea(const float x, const float y) const
 int Field::getDamage() const
 {
     int damage = 0;
-    if (Piece::getDamage(mField[1][0]) > 128)
+    if (Piece::getDamage(mField[1][0]) >= 128)
         damage += Piece::getDamage(mField[1][0]);
-    if (Piece::getDamage(mField[2][0]) > 128)
+    if (Piece::getDamage(mField[2][0]) >= 128)
         damage += Piece::getDamage(mField[1][0]);
     
     return damage;
