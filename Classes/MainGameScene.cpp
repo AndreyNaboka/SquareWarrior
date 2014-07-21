@@ -131,6 +131,7 @@ void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, 
         {
             std::cout << "Destroy enemy" << std::endl;
             destroyEnemy(mField->getDamage());
+            mField->addRandomWarrior();
         }
         else
         {

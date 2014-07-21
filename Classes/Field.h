@@ -32,8 +32,9 @@ public:
     int getTopPosition() const;
     bool isTapIntoAttackArea(const float x, const float y) const;
     int getDamage() const;
-private:
     void addRandomWarrior(const int num = 1);
+    
+private:
     void moveLeft();
     void moveRight();
     void moveTop();
