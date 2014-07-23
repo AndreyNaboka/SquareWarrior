@@ -30,7 +30,7 @@ public:
     void update(const float delta);
     void moveField(const MOVE_DIRECTION direction);
     int getTopPosition() const;
-    bool isTapIntoAttackArea(const float x, const float y) const;
+    bool isTapIntoAttackArea(const float x, const float y);
     int getDamage() const;
     void sendWarriorsToAttack();
     
@@ -41,7 +41,7 @@ private:
     void moveTop();
     void moveBottom();
     void redrawField();
-    
+    bool getSelectedWarrior(const int tapX, const int tapY, int& x, int& y);
     
     struct coord
     {
@@ -58,6 +58,10 @@ private:
     static const int FIELD_HEIGHT = 4;
     Piece::COLORS mField[FIELD_WIDTH][FIELD_HEIGHT];
     cocos2d::Sprite* mFieldMap[FIELD_WIDTH][FIELD_HEIGHT];
+    
+    int mDamage;
+    
+    int mWarriorAttackX, mWarriorAttackY;
     
     float mLeftAttackArea;
     float mRightAttackArea;

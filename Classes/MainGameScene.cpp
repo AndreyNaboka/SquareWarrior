@@ -129,14 +129,8 @@ void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, 
         
         if (x >= enemyX && x <= enemyX + enemyWidth && y > enemyY - (enemyHeight / 2) && y < enemyY + (enemyHeight / 2))
         {
-            std::cout << "Destroy enemy" << std::endl;
             destroyEnemy(mField->getDamage());
             mField->sendWarriorsToAttack();
-        }
-        else
-        {
-            std::cout << "Attack warriors selected, but you doesn't tap on boss, disable flag attack warriors selected" << std::endl;
-            std::cout << "Tap position: " << x << ", " << y << ", enemy position: " << enemyX << ", " << enemyY << ", enemy size: " << enemyWidth << ", " << enemyHeight << std::endl;
         }
         
         mAttackWarriorsSelected = false;
@@ -145,7 +139,6 @@ void MainGameScene::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, 
     if (mField->isTapIntoAttackArea(touches.at(0)->getLocation().x, touches.at(0)->getLocation().y))
     {
         mAttackWarriorsSelected = true;
-        std::cout << "Tap on attack area" << std::endl;
     }
 }
 

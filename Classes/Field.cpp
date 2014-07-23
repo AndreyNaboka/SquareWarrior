@@ -12,6 +12,7 @@
 /**********************************************************/
 Field::Field(cocos2d::Layer* layer)
     :mLayer(layer)
+    ,mDamage(0)
 {
     // Field background
     cocos2d::Sprite* background = cocos2d::Sprite::create("background.png");
@@ -44,13 +45,6 @@ Field::Field(cocos2d::Layer* layer)
             mLayer->addChild(mFieldMap[w][h]);
         }
     }
-    
-    
-    // Attack area
-    mTopAttackArea = topStartPosY;
-    mBottomAttackArea = mTopAttackArea - (cellHeight * 2);
-    mLeftAttackArea = cellWidth;
-    mRightAttackArea = cellWidth * 3;
     
     addRandomWarrior();
     
@@ -203,13 +197,6 @@ void Field::moveTop()
     }
 }
 
-/**********************************************************/
-void Field::sendWarriorsToAttack()
-{
-    mField[1][0] = Piece::COLORS::BLACK;
-    mField[2][0] = Piece::COLORS::BLACK;
-    redrawField();
-}
 
 /**********************************************************/
 void Field::moveBottom()
@@ -385,23 +372,84 @@ int Field::getTopPosition() const
     return mPiecesTopPosition;
 }
 
+
 /**********************************************************/
-bool Field::isTapIntoAttackArea(const float x, const float y) const
+void Field::sendWarriorsToAttack()
 {
-    if (x >= mLeftAttackArea && x <= mRightAttackArea && y <= mTopAttackArea && y >= mBottomAttackArea)
-        return true;
+    mField[mWarriorAttackX][mWarriorAttackY] = Piece::COLORS::BLACK;
+    redrawField();
+}
+
+/**********************************************************/
+bool Field::getSelectedWarrior(const int tapX, const int tapY, int& x, int& y)
+{
+    for (int w = 0; w < FIELD_WIDTH; ++w)
+    {
+        for (int h = 0; h < FIELD_HEIGHT; ++h)
+        {
+            if (mField[w][h] == Piece::COLORS::BLACK)
+                continue;
+            
+            cocos2d::Sprite* sprite = mFieldMap[w][h];
+            const int spriteWidth = sprite->getContentSize().width * sprite->getScaleX();
+            const int spriteHeight = sprite->getContentSize().height * sprite->getScaleY();
+            const int spriteX = sprite->getPositionX() - (spriteWidth / 2);
+            const int spriteY = sprite->getPositionY() - (spriteHeight / 2);
+
+            if (tapX > spriteX && tapX < spriteX + spriteWidth &&
+                tapY > spriteY && tapY < spriteY + spriteHeight)
+            {
+                x = w;
+                y = h;
+                return true;
+            }
+        }
+    }
     return false;
 }
 
 /**********************************************************/
+bool Field::isTapIntoAttackArea(const float x, const float y)
+{
+
+    int selectedWarriorW, selectedWarriorH;
+    const bool isWarriorSelect = getSelectedWarrior(x, y, selectedWarriorW, selectedWarriorH);
+    if (!isWarriorSelect)
+    {
+        mDamage = 0;
+        return false;
+    }
+    
+    // Only two top central warriors
+    if ((selectedWarriorW < 1 || selectedWarriorW > 2) || selectedWarriorH > 0)
+    {
+        std::cout << "Selected wrong warriors " << selectedWarriorW << ", " << selectedWarriorH << std::endl;
+        return false;
+    }
+    
+    mDamage = Piece::getDamage(mField[selectedWarriorW][selectedWarriorH]);
+    
+    mWarriorAttackX = selectedWarriorW;
+    mWarriorAttackY = selectedWarriorH;
+    
+    std::cout << "[" << selectedWarriorW << "] [" << selectedWarriorH << "], damage: " << mDamage << std::endl;
+    
+    return true;
+
+}
+
+
+
+/**********************************************************/
 int Field::getDamage() const
 {
-    int damage = 0;
-    if (Piece::getDamage(mField[1][0]) >= 128)
-        damage += Piece::getDamage(mField[1][0]);
-    if (Piece::getDamage(mField[2][0]) >= 128)
-        damage += Piece::getDamage(mField[1][0]);
-    
-    return damage;
+    return mDamage;
+//    int damage = 0;
+//    if (Piece::getDamage(mField[1][0]) >= 128)
+//        damage += Piece::getDamage(mField[1][0]);
+//    if (Piece::getDamage(mField[2][0]) >= 128)
+//        damage += Piece::getDamage(mField[1][0]);
+//    
+//    return damage;
 }
 
